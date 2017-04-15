@@ -1,0 +1,28 @@
+该目录，应该放置在和图片文件夹同级目录：
+如：
+----D:/file_path
+    |---kaggle_code
+        |---我们的代码都在这个文件夹中
+    |---train
+        |---Type_1
+        |---Type_2
+        |---Type_3
+    |---test
+
+
+目前文件夹中，配置好可以运行的程序有：
+
+1. convert_types_into_seq.py
+该文件的目的是对标号进行转化，文件中有详细的解释
+
+2. image_resize.py
+该文件的目的是对图片进行resize操作，并且将label存入csv文件中。
+
+3. load_data_and_tflearn.py
+该文件的目的是导入 2 中处理好的数据，然后利用tflearn进行训练。
+
+4. visualization.py
+该文件是将图片全部绘制出来，并没有什么卵用，所以没有按照目录结构进行修改
+
+5. tensorflow_config.py
+该文件并没有写完，其实是不会写。。。

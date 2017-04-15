@@ -15,11 +15,37 @@ from glob import glob
 from convert_types_into_seq import convert_types_into_seq
 
 
+"""
+这个文件的目的是进行如下步骤的操作：
+
+1. 从resize好的文件夹中读取图片
+2. 打乱顺序
+3. 将训练集数据按照比例分割为训练集和测试集
+4. 将label文件的标号转化形式
+5. 调用tflearn进行训练
+
+
+所以根据运行程序的需要，有些路径参数需要更改：
+如：
+    TRAIN_DATA_PATH 需要根据自己的需要更改为resize之后的图片存储位置
+    LABEL_PATH      需要根据自己的需要更改为label文件的位置
+
+    下面的三条语句是存在于程序中，包含图片大小信息的程序，需要根据图片大小进行修改
+    temp = temp.reshape((1,-1))[0,:64*64]
+    X_train
+    X_test          需要根据图片的真实大小更改
+    如：当图片大小为64*64时，要设置为如下形式：
+        X_train = X_train.reshape((-1,64,64,1))
+        X_test = X_test.reshape((-1,64,64,1))
+        temp = temp.reshape((1,-1))[0,:64*64]
+"""
+
 
 
 
 # 处理好的128*128大小的图存储地址
-TRAIN_DATA_PATH = "../train_resize_all_types_size_is_128"
+TRAIN_DATA_PATH = "../image_resize_64"
+LABEL_PATH = TRAIN_DATA_PATH + '/train.csv'
 # 获取所有图的地址+名字
 image_files = glob(os.path.join(TRAIN_DATA_PATH, "*jpg"))
 # 提取所有图的名字
@@ -45,7 +71,7 @@ X_test_ids = image_ids[train_size:]
 # 1         '10.jpg'        2
 # 2         '50.jpg'        3
 # 3         '121.jpg'       1
-train_label = pd.read_csv('train.csv')
+train_label = pd.read_csv(LABEL_PATH)
 
 # 根据设定好的分组id号，分别将训练数据和测试数据读入到返回值中
 # 输入为id号的列表，输出为图的行向量表，和label表
@@ -61,7 +87,7 @@ def load_image(ids):
         # 读入这幅图
         temp = cv2.imread(image_name)
         # 将128*128*3大小的图转换为行向量，类型为numpy.ndarray
-        temp = temp.reshape((1,-1))[0,:128*128]
+        temp = temp.reshape((1,-1))[0,:64*64]
         temp = temp / np.max(temp)
         # print(temp/np.max(temp))
         # print(temp)
@@ -91,8 +117,8 @@ def load_image(ids):
 X_train,Y_train = load_image(X_train_ids)
 X_test,Y_test = load_image(X_test_ids)
 
-X_train = X_train.reshape((-1,128,128,1))
-X_test = X_test.reshape((-1,128,128,1))
+X_train = X_train.reshape((-1,64,64,1))
+X_test = X_test.reshape((-1,64,64,1))
 Y_train = convert_types_into_seq(Y_train)
 Y_test = convert_types_into_seq(Y_test)
 
@@ -109,7 +135,7 @@ img_aug.add_random_rotation(max_angle=90.)
 
 
 # Building convolutional network
-network = input_data(shape=[None, 128, 128, 1], name='input')
+network = input_data(shape=[None, 64, 64, 1], name='input')
 network = conv_2d(network, 32, 3, activation='relu', regularizer="L2")
 network = max_pool_2d(network, 2)
 network = local_response_normalization(network)

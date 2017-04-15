@@ -6,7 +6,7 @@ labels=np.array([    ['789.jpg', 1]
                     ,['825.jpg', 3]
                     ,['1330.jpg', 2]
                     ,['439.jpg', 3]])
-# print(labels)
+# 该文件提供一个函数，函数的功能是如下的label的格式转换
 # 要将label文件转化为tensorflow能够输入的形式
 #       转化前的格式为：                  转化后的格式为：
 #     [ [‘0.jpg’   1]                    ‘0.jpg’   [ [1 0 0]
